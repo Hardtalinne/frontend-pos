@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button, Container, Flex, Text, useToast } from '@chakra-ui/react'
-import { postUsers, User, UserPayload } from '../../services/get-users'
+import { postUsers, UserPayload } from '../../services/users'
 import { InputForm } from '../../components/InputForm'
 import { Link, useNavigate } from 'react-router-dom'
 import { UsersTypes } from '../../utils/constants'
@@ -21,10 +21,14 @@ export type FormError = {
 }
 
 export const RegisterUser = () => {
-  // const history = useHistory()
   const [formValues, setFormValues] = useState<formDataCreateUser>()
+  const [isCreateUserProfessional, setIsCreateUserProfessional] = useState<boolean>(false);
+  const [isCreateUserForLogin, setIsCreateUserForLogin] = useState<boolean>(false);
+  const [title, setTitle] = useState<string>('Cadastrar Aluno');
+
   const navigate = useNavigate();
   const toast = useToast()
+
 
   const handleInputChange = (e: { target: { name: any; value: any } }) => {
     const { name, value } = e.target
@@ -38,11 +42,11 @@ export const RegisterUser = () => {
 
   const handleSubmit = async () => {
     const userPayload = formValues.user as UserPayload
-    userPayload.type_user = UsersTypes.STUDENT
+    
+    userPayload.type_user = isCreateUserProfessional ? UsersTypes.PERSONAL : UsersTypes.STUDENT
 
     const { data, status, error } = await postUsers(userPayload)
 
-    console.log(data)
     if (status === 400) {
       toast({
         position: 'top',
@@ -66,9 +70,25 @@ export const RegisterUser = () => {
     }
   }
 
+  useEffect(() => {
+    validCreateUser();
+  }, [])
+
+  const validCreateUser = () => {
+    if (window.location.pathname === '/register-professional') {
+      setIsCreateUserProfessional(true);
+      setTitle("Cadastrar Profissional");
+    }
+
+    if (window.location.pathname === '/register-user') {
+      setIsCreateUserForLogin(true);
+      setTitle("Cadastre-se");
+    }
+  }
+
   return (
     <Container mt={50}>
-      <Text mb="10" fontSize={40} color="yellow.500">Cadastre-se </Text>
+      <Text mb="10" fontSize={40} color="yellow.500">{title} </Text>
 
       <InputForm
         label='Nome'
@@ -109,44 +129,8 @@ export const RegisterUser = () => {
         isRequired
       />
 
-      {/* <div
-        style={{
-          display: 'flex',
-          flex: 1,
-          width: '100%',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'stretch',
-        }}
-      >
-        <Text>Tipo de usuário *</Text>
-        <select
-          name="user.type_user_id"
-          id=""
-          value={formValues?.user?.type_user || ''}
-          onChange={handleInputChange}
-          style={{
-            width: '100%',
-            height: 50,
-            padding: 10,
-            borderRadius: 4,
-            fontSize: 16,
-            marginTop: 10,
-            border: `1px solid ${typeUserIdIsError ? 'red' : 'black'}`,
-          }}
-        >
-          <option>Selecione o tipo de usuario</option>
-          {typesUserOptions.length >= 1 &&
-            typesUserOptions.map(typeUser => (
-              <option key={typeUser.value} value={typeUser.value}>
-                {typeUser.label}
-              </option>
-            ))}
-        </select>
-      </div> */}
-
       <Flex alignItems="center" justifyContent="space-between" >
-        <Link to="/login">
+        <Link to={isCreateUserForLogin ? "/login" : "/home"}>
           Voltar
         </Link>
         <Button mt={4} onClick={handleSubmit} width={40} backgroundColor="yellow.500"> Cadastrar </Button>

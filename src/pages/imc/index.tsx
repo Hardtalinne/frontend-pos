@@ -2,8 +2,8 @@ import { Button, CircularProgress, Container, Flex, Select, Text, useToast } fro
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { InputForm } from '../../components/InputForm'
-import { ImcPayload, postImc } from '../../services/get-imc'
-import { getUserByTypeUser } from '../../services/get-users'
+import { ImcPayload, postImc } from '../../services/imc'
+import { getUserByTypeUser } from '../../services/users'
 import { UsersTypes } from '../../utils/constants'
 
 export type SelectOptionsUserType = {

@@ -2,11 +2,9 @@ import { Button, Container, Flex, Text, useToast } from '@chakra-ui/react'
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../Providers/auth'
-import { getMe, LoginPayload, loginUser } from '../../services/user'
+import { getMe, LoginPayload, loginUser } from '../../services/user-login'
 import { FaEye, FaEyeSlash } from 'react-icons/fa'
 import { InputForm } from '../../components/InputForm'
-
-
 
 export function Login() {
   const { signin } = useAuth()

@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { createContext, useState } from "react";
-import { User } from "../services/get-users";
+import { User } from "../services/users";
 
 interface AuthContextType {
   user?: User;

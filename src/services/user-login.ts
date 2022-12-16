@@ -1,6 +1,5 @@
-/* eslint-disable no-restricted-globals */
 import { api } from './api'
-import { User } from './get-users'
+import { User } from './users'
 
 export type LoginPayload = {
   user: string
@@ -22,12 +21,8 @@ export type Token = {
   expires_in?: number
 }
 
-// export type UserMe = {
-//   userMe: User
-// }
-
 export const getMe = async (access_token: string): Promise<GetMeResponse> => {
-  const { data, status } = await api.get<User>('me', { headers: { Authorization: `Bearer ${access_token}`} })
+  const { data, status } = await api.get<User>('me', { headers: { Authorization: `Bearer ${access_token}` } })
 
   return { data, status }
 }
