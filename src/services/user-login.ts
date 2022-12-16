@@ -21,8 +21,8 @@ export type Token = {
   expires_in?: number
 }
 
-export const getMe = async (access_token: string): Promise<GetMeResponse> => {
-  const { data, status } = await api.get<User>('me', { headers: { Authorization: `Bearer ${access_token}` } })
+export const getMe = async (access_token: string) => {
+  const { data, status } = await api.get('me', { headers: { Authorization: `Bearer ${access_token}` } })
 
   return { data, status }
 }

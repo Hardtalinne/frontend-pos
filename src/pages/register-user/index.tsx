@@ -1,13 +1,10 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Button, Container, Flex, Text, useToast } from '@chakra-ui/react'
 import { postUsers, UserPayload } from '../../services/users'
 import { InputForm } from '../../components/InputForm'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { UsersTypes } from '../../utils/constants'
-
-type formDataCreateUser = {
-  user: UserPayload
-}
+import { withAuth } from '../../utils/hoc/with-auth'
 
 export type SelectOptions = {
   label: string | number
@@ -20,80 +17,56 @@ export type FormError = {
   message?: string
 }
 
-export const RegisterUser = () => {
-  const [formValues, setFormValues] = useState<formDataCreateUser>()
-  const [isCreateUserProfessional, setIsCreateUserProfessional] = useState<boolean>(false);
-  const [isCreateUserForLogin, setIsCreateUserForLogin] = useState<boolean>(false);
-  const [title, setTitle] = useState<string>('Cadastrar Aluno');
-
+const RegisterUser = () => {
   const navigate = useNavigate();
-  const toast = useToast()
+  const { type } = useParams()
 
+  const [formValues, setFormValues] = useState<UserPayload>({} as UserPayload)
+
+  const toast = useToast({
+    position: 'top',
+    duration: 2000,
+    isClosable: true,
+  })
 
   const handleInputChange = (e: { target: { name: any; value: any } }) => {
     const { name, value } = e.target
 
-    const valueForm = value
-    const type = name.split('.')[0]
-    const attribute = name.split('.')[1]
-
-    setFormValues({ ...formValues, [type]: { ...formValues?.[type], [attribute]: valueForm } })
+    setFormValues({ ...formValues, [name]: value })
   }
 
   const handleSubmit = async () => {
-    const userPayload = formValues.user as UserPayload
-    
-    userPayload.type_user = isCreateUserProfessional ? UsersTypes.PERSONAL : UsersTypes.STUDENT
+    const userPayload = formValues
 
-    const { data, status, error } = await postUsers(userPayload)
+    userPayload.type_user = type === 'student' ? UsersTypes.STUDENT : UsersTypes.PERSONAL
 
-    if (status === 400) {
+    const { status, error } = await postUsers(userPayload)
+
+    if (status >= 400) {
       toast({
-        position: 'top',
         title: 'Atenção!',
         description: error,
         status: 'error',
-        duration: 2000,
-        isClosable: true,
       })
-
-    } else {
-      toast({
-        position: 'top',
-        description: "Usuário cadastrado com sucesso!",
-        status: 'success',
-        duration: 2000,
-        isClosable: true,
-      })
-
-      navigate("/login");
-    }
-  }
-
-  useEffect(() => {
-    validCreateUser();
-  }, [])
-
-  const validCreateUser = () => {
-    if (window.location.pathname === '/register-professional') {
-      setIsCreateUserProfessional(true);
-      setTitle("Cadastrar Profissional");
+      return
     }
 
-    if (window.location.pathname === '/register-user') {
-      setIsCreateUserForLogin(true);
-      setTitle("Cadastre-se");
-    }
+    toast({
+      description: "Usuário cadastrado com sucesso!",
+      status: 'success',
+    })
+
+    navigate("/");
   }
 
   return (
     <Container mt={50}>
-      <Text mb="10" fontSize={40} color="yellow.500">{title} </Text>
+      <Text mb="10" fontSize={40} color="purple">Cadastrar {type === 'student' ? 'Aluno' : 'Profissional'} </Text>
 
       <InputForm
         label='Nome'
-        name="user.name"
-        value={formValues?.user?.name || ''}
+        name="name"
+        value={formValues?.name || ''}
         onChange={handleInputChange}
         placeholder="Digite seu nome"
         errorMessage="O nome é obrigatório"
@@ -102,16 +75,16 @@ export const RegisterUser = () => {
 
       <InputForm
         label='Email'
-        name="user.email"
-        value={formValues?.user?.email || ''}
+        name="email"
+        value={formValues?.email || ''}
         onChange={handleInputChange}
         placeholder="Digite seu e-mail"
       />
 
       <InputForm
         label='Usuário'
-        name="user.user"
-        value={formValues?.user?.user || ''}
+        name="user"
+        value={formValues?.user || ''}
         onChange={handleInputChange}
         placeholder="Digite seu usuário"
         errorMessage="O usuário é obrigatório"
@@ -121,8 +94,8 @@ export const RegisterUser = () => {
       <InputForm
         label='Senha'
         type="password"
-        name="user.password"
-        value={formValues?.user?.password || ''}
+        name="password"
+        value={formValues?.password || ''}
         onChange={handleInputChange}
         placeholder="Digite sua senha"
         errorMessage="A senha é obrigatória"
@@ -130,11 +103,14 @@ export const RegisterUser = () => {
       />
 
       <Flex alignItems="center" justifyContent="space-between" >
-        <Link to={isCreateUserForLogin ? "/login" : "/home"}>
+        <Link to="/">
           Voltar
         </Link>
-        <Button mt={4} onClick={handleSubmit} width={40} backgroundColor="yellow.500"> Cadastrar </Button>
+
+        <Button mt={4} onClick={handleSubmit} width={40} backgroundColor="purple.300">Cadastrar</Button>
       </Flex>
     </Container>
   )
 }
+
+export default withAuth(RegisterUser, [UsersTypes.ADMIN, UsersTypes.PERSONAL])

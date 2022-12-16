@@ -33,16 +33,18 @@ export type ImcList = {
 
 export const postImc = async (payload: ImcPayload): Promise<ImcResponse> => {
   try {
-    const { data, status } = await api.post('imc', payload)
+    const { data, status } = await api.post('calculate-imc', payload)
+    console.log({data})
     return { status, data }
   
   } catch (error) {
-  
+    console.log({error: error})
+
     return  { error: error.response.data.message, status: error.response.status }
   }
 }
 
-export const getImcByIduser = async (id_user: number): Promise<ImcResponse|any> => {
+export const getImcByIduser = async (id_user: number): Promise<ImcList[]> => {
   const { data, status } = await api.get<ImcList[]>(`imc/${id_user}`)
   return status === 200 ? data : []
 }

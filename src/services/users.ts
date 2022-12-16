@@ -2,15 +2,13 @@ import { FormError } from "../pages/register-user"
 import { api } from "./api"
 
 export type User = {
-  id?: string
-  nome?: string
-  usuario?: string
-  email?: string
-  tipo_usuario?: number
-  senha?: string
-  access_token?: string
-  expires_in?: number
-  tipoUsuario?: number
+  id: number
+  nome: string
+  usuario: string
+  email: string
+  tipo_usuario: number
+  access_token: string
+  expires_in: number
 }
 
 export type UserPayload = {
@@ -62,6 +60,12 @@ export const getUserByTypeUser = async (type: number): Promise<UserByTypeRespons
   const { data, status } = await api.get<User[]>(`user/${type}`)
   return status === 200 ? data : []
 }
+
+export const getUserById = async (id: number): Promise<UserByTypeResponse|any> => {
+  const { data, status } = await api.get<User[]>(`user/${id}`)
+  return status === 200 ? data : []
+}
+
 
 export const getTypeUser = async (): Promise<TypeUser[]> => {
   const { data, status } = await api.get<TypeUser[]>('types-users')
