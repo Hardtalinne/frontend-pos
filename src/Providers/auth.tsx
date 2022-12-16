@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { createContext, useState } from "react";
 import { User } from "../services/users";
 
@@ -14,14 +14,22 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User>({} as User);
 
   const signin = (newUser: User, callback: VoidFunction) => {
-      setUser(newUser);
-      callback();
+    setUser(newUser);
+    callback();
   };
 
   const signout = (callback: VoidFunction) => {
-      setUser(null);
-      callback();
+    setUser(null);
+    callback();
   };
+
+  const storeUserData = () => {
+    localStorage.setItem('@user', JSON.stringify(user))
+  };
+
+  useEffect(() => {
+    user && storeUserData()
+  }, [user])
 
   return <AuthContext.Provider value={{ user, signin, signout }}>{children}</AuthContext.Provider>;
 }

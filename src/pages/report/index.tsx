@@ -41,7 +41,7 @@ const ReportUser = () => {
                 <Flex flex={1} justifyContent="center" >
                     <Flex alignItems="center" mr="40px">
                         <Text>Filtrar:</Text>
-                        <Input ml="8px" borderStartRadius="6px" borderEndRadius={0} border="1px solid black" type="text" placeholder="Ex: Matheus" />
+                        <Input ml="8px" borderStartRadius="6px" borderEndRadius={0} border="1px solid black" type="text" placeholder="Ex: Aline" />
                         <Button backgroundColor="white" borderStartRadius={0} borderEndRadius="6px" border="1px solid RGBA(0, 0, 0, 0.24)"><BiSearch size={30} /></Button>
                     </Flex>
                 </Flex>
