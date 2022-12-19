@@ -1,12 +1,10 @@
 import { Box, Button, Flex, Heading, Input, Text } from "@chakra-ui/react";
-import { Bar, BarChart, CartesianGrid, LabelList, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import ReactToPdf from "react-to-pdf";
 import { useEffect, useRef, useState } from "react";
-import { BiSearch } from "react-icons/bi"
 import { PDFOptions, UsersTypes } from "../../utils/constants";
-import { useParams } from "react-router-dom";
-import {  User } from "../../services/users";
-import { getImcByIduser, ImcList, ImcListResponse } from "../../services/imc";
+import { User } from "../../services/users";
+import { getImcByIduser, ImcListResponse } from "../../services/imc";
 import { useAuth } from "../../Providers/auth";
 import { withAuth } from "../../utils/hoc/with-auth";
 
@@ -41,7 +39,7 @@ const FollowUp = () => {
         const user = localStorage.getItem("user");
         const userData = JSON.parse(user);
         const data = dataInicio !== '0' ? dataInicio : '0';
-        fetchImcs(userData.id,data)
+        fetchImcs(userData.id, data)
     }
 
     const fetchImcs = async (id: number, data_avalicao: string) => {
@@ -65,14 +63,12 @@ const FollowUp = () => {
                     <Heading>
                         {user.nome}
                     </Heading>
-                    <Button mx="30px">Alterar</Button>
-                    <Button>Excluir</Button>
                 </Flex>
 
                 <Flex flex={1} justifyContent="center" >
                     <Flex alignItems="center" mr="40px">
                         <Text>Filtrar:</Text>
-                        <Input ml="8px" borderStartRadius="6px" borderEndRadius={0} border="1px solid black" type="date"  onChange={handleDataInicioChange}/>
+                        <Input ml="8px" borderStartRadius="6px" borderEndRadius={0} border="1px solid black" type="date" onChange={handleDataInicioChange} />
                     </Flex>
 
 

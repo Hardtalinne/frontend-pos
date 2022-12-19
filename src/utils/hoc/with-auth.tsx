@@ -11,9 +11,9 @@ export const withAuth = <P extends object>(
     return (props: P) => {
         const navigate = useNavigate()
         const user = localStorage.getItem('user')
-        const userData:User = JSON.parse(user) 
-        useEffect(() => {
+        const userData: User = JSON.parse(user)
 
+        useEffect(() => {
             if (!userData?.access_token) {
                 navigate('/login')
                 return
