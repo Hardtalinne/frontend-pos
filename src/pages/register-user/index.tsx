@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Button, Container, Flex, Text, useToast } from '@chakra-ui/react'
-import { getUserByTypeUser, postUsers, UserPayload } from '../../services/users'
+import { getUserByTypeUser, postUsers, User, UserPayload } from '../../services/users'
 import { InputForm } from '../../components/InputForm'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { UsersTypes } from '../../utils/constants'
@@ -24,6 +24,9 @@ const RegisterUser = () => {
   const [formValues, setFormValues] = useState<UserPayload>({} as UserPayload)
   const [isEdit, setIsEdit] = useState<boolean>(false)
 
+  const userStorage = localStorage.getItem("user");
+  const user = JSON.parse(userStorage) as User;
+
   const toast = useToast({
     position: 'top',
     duration: 2000,
@@ -39,7 +42,7 @@ const RegisterUser = () => {
   const handleSubmit = async () => {
     const userPayload = formValues
 
-    userPayload.type_user = type === 'student' || isEdit ? UsersTypes.STUDENT : UsersTypes.PERSONAL
+    userPayload.type_user = type === 'student' || (isEdit && user.tipo_usuario !== UsersTypes.ADMIN) ? UsersTypes.STUDENT : UsersTypes.PERSONAL
 
     const { status, error } = await postUsers(userPayload)
 
@@ -70,7 +73,7 @@ const RegisterUser = () => {
 
   const getUserToEdit = async (id: string) => {
     const { data } = await getUserByTypeUser({ id })
-    console.log({ data, id })
+
     if (data?.length) {
       setFormValues({
         name: data[0].nome,
