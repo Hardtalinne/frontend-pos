@@ -153,7 +153,7 @@ const ReportUser = () => {
                         Voltar
                     </Text>
 
-                    <ReactToPdf targetRef={ref} filename="relatorio-user.pdf" options={PDFOptions} x={1} y={1} scale={0.9}>
+                    <ReactToPdf targetRef={ref} filename="relatorio-user.pdf" options={PDFOptions} x={0.5} y={0.5} scale={0.7}>
                         {({ toPdf }) => (
                             <Button
                                 mt={4}
