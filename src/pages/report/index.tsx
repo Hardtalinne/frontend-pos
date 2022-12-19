@@ -7,9 +7,11 @@ import { SelectOptionsUserType } from '../imc'
 import ReactToPdf from "react-to-pdf";
 import { BiSearch } from 'react-icons/bi'
 import { withAuth } from '../../utils/hoc/with-auth'
+import { useAuth } from '../../Providers/auth'
 
 const ReportUser = () => {
     const { type } = useParams()
+    const {  signout } = useAuth()
 
     const [userPersonalOptions, setUserPersonalOptions] = useState<SelectOptionsUserType[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -46,7 +48,7 @@ const ReportUser = () => {
                     </Flex>
                 </Flex>
 
-                <Button><Link to="/login">Sair</Link></Button>
+                <Button onClick={signout}>Sair</Button>
             </Flex>
 
             <Box w="calc(100vw - 400px)" h="calc(100vh - 180px)">

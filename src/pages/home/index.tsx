@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect } from 'react'
+import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../Providers/auth'
 import { UsersTypes } from '../../utils/constants'
@@ -8,8 +8,7 @@ const Home = () => {
   const navigate = useNavigate()
   const { user } = useAuth()
 
-  useLayoutEffect(() => {
-    console.log('aaaaaa')
+  useEffect(() => {
     navigate(user.tipo_usuario === UsersTypes.STUDENT ? '/follow-up/0' : '/reports/student')
   }, [user])
   
