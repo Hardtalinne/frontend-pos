@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Heading, Input, Text } from "@chakra-ui/react";
+import { Box, Button, CircularProgress, Flex, Heading, Input, Text } from "@chakra-ui/react";
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import ReactToPdf from "react-to-pdf";
 import { useEffect, useRef, useState } from "react";
@@ -25,7 +25,7 @@ const CustomTooltip = ({ active, payload, label }) => {
 
 const FollowUp = () => {
 
-    const { user: loggedUser, signout } = useAuth()
+    const { signout } = useAuth()
 
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [dataImcs, setDataImcs] = useState<ImcListResponse[]>([])
@@ -78,29 +78,34 @@ const FollowUp = () => {
                 </Flex>
                 <Button onClick={signout}>Sair</Button>
             </Flex>
-            <Flex h="calc(100vh - 180px)" ref={ref}>
-                <ResponsiveContainer width="100%" height="100%">
-                    <BarChart
-                        width={500}
-                        height={300}
-                        data={dataImcs}
-                        margin={{
-                            top: 5,
-                            right: 30,
-                            left: 20,
-                            bottom: 5,
-                        }}
-                    >
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="dataAvalicao" />
-                        <YAxis dataKey="imc" />
-                        {/* @ts-ignore */}
-                        <Tooltip content={<CustomTooltip />} />
-                        <Legend />
-                        <Bar dataKey="imc" fill="#8884d8" />
-                    </BarChart>
-                </ResponsiveContainer>
-            </Flex>
+            {isLoading ?
+                <Flex alignItems="center"  >
+                    <Text>Aguardando carregamento...</Text>
+                    <CircularProgress isIndeterminate color='blue.300' ml={10} />
+                </Flex> :
+                <Flex h="calc(100vh - 180px)" ref={ref}>
+                    <ResponsiveContainer width="100%" height="100%">
+                        <BarChart
+                            width={500}
+                            height={300}
+                            data={dataImcs}
+                            margin={{
+                                top: 5,
+                                right: 30,
+                                left: 20,
+                                bottom: 5,
+                            }}
+                        >
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="dataAvalicao" />
+                            <YAxis dataKey="imc" />
+                            {/* @ts-ignore */}
+                            <Tooltip content={<CustomTooltip />} />
+                            <Legend />
+                            <Bar dataKey="imc" fill="#8884d8" />
+                        </BarChart>
+                    </ResponsiveContainer>
+                </Flex>}
         </Box>
     );
 }
